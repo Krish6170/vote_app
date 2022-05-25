@@ -1,10 +1,10 @@
-from brownie import Vote,test_try
+from brownie import Vote,test_try,config,network
 from scripts.helpfulscripts import getAccounts
 from scripts.helpfulscripts import update_front_end
-
+# add publish
 def deploys(frontend_update=True):
     account=getAccounts()
-    Vote.deploy({"from":account})
+    Vote.deploy({"from":account},publish_source=config["networks"][network.show_active()]["verified"])
     if(frontend_update):
         update_front_end()
     print("deployed")
@@ -58,5 +58,5 @@ def deploy_test():
 
 def main():
     deploys()
-    test2()
+    # test2()
     # deploy_test()

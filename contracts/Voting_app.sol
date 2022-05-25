@@ -31,6 +31,7 @@ contract Vote
       bool isauthorised;
       bool hasVoted;
     }
+
     struct VCandidate
     {
         string name;
@@ -55,13 +56,36 @@ contract Vote
 
     
     function addCandidate(string memory _name) public OnlyOwner
-    {
+    {require(vote_state==VOTE_STATE.CLOSED,"Can't add while vote is on going");
      Candidates.push(VCandidate(_name,0));
      total_cand+=1;   
     }
+
+       function addCandidateBulk(string [] memory _names) public OnlyOwner
+    {require(vote_state==VOTE_STATE.CLOSED,"Can't add while vote is on going");
+        for(uint i =0;i<_names.length;i++)
+        {
+            Candidates.push(VCandidate(_names[i],0));
+            total_cand+=1;   
+    
+        }
+    }
+    
+    
+    function addVoterseBulk(address [] memory _names) public OnlyOwner
+    {require(vote_state==VOTE_STATE.CLOSED,"Can't add while vote is on going");
+        for(uint i =0;i<_names.length;i++)
+        {   Voters[_names[i]].isauthorised=true;
+            Voters[_names[i]].hasVoted=false;
+            
+            total_voters+=1;   
+    
+        }
+    }
+    
      
     function addVoter(address a) public OnlyOwner
-    {
+    {require(vote_state==VOTE_STATE.CLOSED,"Can't add while vote is on going");
      Voters[a].isauthorised=true;
      Voters[a].hasVoted=false;
      total_voters+=1 ;
